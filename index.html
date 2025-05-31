@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,7 +158,7 @@
       to {opacity: 1;}
     }
   </style>
-<script type='text/javascript' src='//pl26800357.profitableratecpm.com/fb/65/1a/fb651abdc8a52be3f3fb3daf1e567c39.js'></script></head>
+</head>
 <body>
   <header>
     YouTube Thumbnail Downloader
@@ -191,7 +190,7 @@
   </div>
 
   <footer>
-    Created by <strong>SANI DEVELOPER</strong> © 2025 
+    Created by <strong>SANI DEVELOPER</strong> © 2025 only
   </footer>
 
   <script>
@@ -199,6 +198,15 @@
       const regex = /(?:v=|\/)([0-9A-Za-z_-]{11})/;
       const match = url.match(regex);
       return match ? match[1] : null;
+    }
+
+    async function downloadImage(url, name) {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = name;
+      link.click();
     }
 
     function getThumbnails() {
@@ -217,13 +225,12 @@
 
         for (let label in sizes) {
           const thumbUrl = `https://img.youtube.com/vi/${videoId}/${sizes[label]}`;
+          const id = `download_${sizes[label]}`;
           output.innerHTML += `
             <div class="thumb-box">
               <h3>${label}</h3>
               <img src="${thumbUrl}" alt="${label} Thumbnail" />
-              <a href="${thumbUrl}" target="_blank" download>
-                <button class="download-btn">Download</button>
-              </a>
+              <button class="download-btn" onclick="downloadImage('${thumbUrl}', '${label.replace(" ", "_")}.jpg')">Download</button>
             </div>
           `;
         }
@@ -236,5 +243,5 @@
       document.body.classList.toggle('light');
     }
   </script>
-<script type='text/javascript' src='//pl26800333.profitableratecpm.com/55/c5/b0/55c5b0e7d31a388d5a890f42b1a10d37.js'></script></body>
-</html>
+</body>
+  </html>
