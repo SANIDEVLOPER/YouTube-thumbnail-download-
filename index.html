@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YouTube Thumbnail Downloader - SANI DEVELOPER</title>
+  <style>
+    :root {
+      --bg-color: #111;
+      --text-color: #fff;
+      --box-bg: #222;
+      --button-bg: #e62117;
+      --button-hover: #c41d14;
+      --download-bg: #1e90ff;
+      --download-hover: #0077cc;
+    }
+    body.light {
+      --bg-color: #f2f2f2;
+      --text-color: #000;
+      --box-bg: #fff;
+      --button-bg: #ff4757;
+      --button-hover: #e84141;
+      --download-bg: #3498db;
+      --download-hover: #2980b9;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      transition: background 0.4s, color 0.4s;
+    }
+    header {
+      padding: 25px 20px;
+      background-color: var(--button-bg);
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.2);
+    }
+    .container {
+      padding: 30px 10px;
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 80%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    button.search-btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      background: var(--button-bg);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button.search-btn:hover {
+      background: var(--button-hover);
+    }
+    .thumbnails {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      margin-top: 30px;
+    }
+    .thumb-box {
+      background: var(--box-bg);
+      padding: 15px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      animation: fadeIn 1s ease;
+    }
+    .thumb-box img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .download-btn {
+      margin-top: 10px;
+      background: var(--download-bg);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .download-btn:hover {
+      background: var(--download-hover);
+    }
+    .how-to-use {
+      background: var(--box-bg);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+    .how-to-use h2 {
+      margin-bottom: 15px;
+    }
+    .how-to-use ol {
+      text-align: left;
+      line-height: 1.8;
+    }
+    .calc-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .calc-button a button {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .calc-button a button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 15px;
+      font-size: 14px;
+      color: #aaa;
+      text-align: center;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    YouTube Thumbnail Downloader
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+  </header>
+
+  <div class="container">
+    <p>Paste the YouTube video URL below:</p>
+    <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID" />
+    <br />
+    <button class="search-btn" onclick="getThumbnails()">🔍 Search</button>
+
+    <div class="thumbnails" id="thumbnailResults"></div>
+
+    <div class="how-to-use">
+      <h2>📘 How to Use (3 Steps)</h2>
+      <ol>
+        <li>👉 Step 1: Copy the URL of any YouTube video</li>
+        <li>👉 Step 2: Paste it into the box above and click Search</li>
+        <li>👉 Step 3: Choose your favorite thumbnail and click Download</li>
+      </ol>
+    </div>
+
+    <div class="calc-button">
+      <a href="https://sanidevloper.github.io/Calculation-tools-/" target="_blank">
+        <button>Calculation</button>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    Created by <strong>SANI DEVELOPER</strong> © 2025 only
+  </footer>
+
+  <script>
+    function extractVideoId(url) {
+      const regex = /(?:v=|\/)([0-9A-Za-z_-]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+
+    function getThumbnails() {
+      const url = document.getElementById('youtubeUrl').value;
+      const videoId = extractVideoId(url);
+      const output = document.getElementById('thumbnailResults');
+      output.innerHTML = '';
+
+      if (videoId) {
+        const sizes = {
+          "Max Resolution": "maxresdefault.jpg",
+          "High Quality": "hqdefault.jpg",
+          "Medium Quality": "mqdefault.jpg",
+          "Default": "default.jpg"
+        };
+
+        for (let label in sizes) {
+          const thumbUrl = `https://img.youtube.com/vi/${videoId}/${sizes[label]}`;
+          output.innerHTML += `
+            <div class="thumb-box">
+              <h3>${label}</h3>
+              <img src="${thumbUrl}" alt="${label} Thumbnail" />
+              <a href="${thumbUrl}" target="_blank" download>
+                <button class="download-btn">Download</button>
+              </a>
+            </div>
+          `;
+        }
+      } else {
+        output.innerHTML = "<p style='color: red;'>Please enter a valid YouTube URL!</p>";
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+    }
+  </script>
+</body>
+</html>
